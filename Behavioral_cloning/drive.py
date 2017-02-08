@@ -26,7 +26,7 @@ def prepImage(img):
     shape = img.shape
     img = img[math.floor(shape[0]/4):shape[0]-25, 0:shape[1]]
     Y_channel = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
-    img = cv2.resize(normalize(Y_channel[:,:,0],  axis=1, norm='l1'),(64, 64), interpolation=cv2.INTER_AREA)  
+    img = cv2.resize(Y_channel[:,:,0],(64, 64), interpolation=cv2.INTER_AREA)  
     return img
 
 @sio.on('telemetry')
