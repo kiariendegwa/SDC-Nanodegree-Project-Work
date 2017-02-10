@@ -21,13 +21,19 @@ app = Flask(__name__)
 model = None
 prev_image_array = None
 
-def prepImage(img):
-    #Get rid of top 1/5 of image, and bottom 25 pixels
-    shape = img.shape
-    img = img[math.floor(shape[0]/4):shape[0]-25, 0:shape[1]]
-    Y_channel = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
-    img = cv2.resize(Y_channel[:,:,0],(64, 64), interpolation=cv2.INTER_AREA)  
-    return img
+def preprocess_input(x):
+    FINAL_IMG_SHAPE = (66, 200, 3)
+
+    height = x.shape[0]
+    width = x.shape[1]
+
+    factor = float(FINAL_IMG_SHAPE[1]) / float(width)
+
+    resized_size = (int(width*factor), int(height*factor))
+    x = cv2.resize(x, resized_size)
+    crop_height = resized_size[1] - FINAL_IMG_SHAPE[0]
+
+    return x[crop_height:, :, :]
 
 @sio.on('telemetry')
 def telemetry(sid, data):
@@ -43,11 +49,15 @@ def telemetry(sid, data):
         image = Image.open(BytesIO(base64.b64decode(imgString)))
                
         image_array = np.asarray(image)
-        image_array = prepImage(image_array)
-        image_array = image_array.reshape(64, 64, 1)
+        image_array =  preprocess_input(image_array)
+        transformed_image_array = image_array[None,:,:,:]
+        steering_angle = float(model.predict(transformed_image_array, batch_size=1))
+        
 
-        steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
-        throttle = 0.2
+        throttle = 0.09
+        if abs(steering_angle) > 0.25:
+             throttle = 0.009
+
         print(steering_angle, throttle)
         send_control(steering_angle, throttle)
 
