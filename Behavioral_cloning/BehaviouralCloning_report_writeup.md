@@ -78,13 +78,11 @@ The final model was then changed to the NVIDIA architecture as described by [Nvi
 
 ####3. Creation of the Training Set & Training Process
 Being aware that I was working with a limited data set I chose to use a generator that took images from the test set and augmented them in several ways, this was inspired by the [blog post](https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html). The data set was augmented in the following means:
-* Add jitter
-* Add random shadow over entire image
-* Add shadow in particular image region.
+* Add jitter to image data, this is in the form vertical and horizontal shifts.
 * Flip images over to make data symetrical. 
 * Crop image to highlight important features within input images.
 
-A generator when called by the model.fit.generator, would then randomly augment the initial data set and produce more data for training. This led to ALOT of troubleshooting as to whether or not the data pipeline was adequately passing info to the model.fit_generator as this expanded data set did not lead to the expected model improvements.
+A generator when called by the model.fit.generator, would then randomly augment the initial data set and produce more data for training. This led to ALOT of troubleshooting as to whether or not the data pipeline was adequately passing info to the model.fit.generator as this expanded data set did not lead to the expected model improvements.
 
 As earlier mentioned it was a massive oversight not recognizing tha the images captured in the test set were collected at varying throttle magnitudes. Lowering this value during model simulation testing led to better expected results.
 
