@@ -1,8 +1,5 @@
 #**Behavioral Cloning** 
 
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
 ---
 
 **Behavioral Cloning Project**
@@ -68,18 +65,19 @@ and an accompanying csv file with reference points regarding, training image nam
 
 ####1. Solution Design Approach
 
-The overall strategy for deriving a model architecture was to build up the simplest covnet model in keras and iteratively improve results by building larger more sophisticated algorithms - in this case the state of the art NVIDIA architecture or Comma.ai architecture.
+The overall strategy for deriving a model architecture was to build up the simplest covnet model in keras and iteratively improve results by building larger more sophisticated algorithms - in this case the simplest model was the Le-net 5 architecture and the state of the art NVIDIA architecture or Comma.ai architecture.
 
-My first step was to use a convolution neural network model (Le-net 5) similar to the P2, the traffic sign classification problem. I thought this model might be appropriate because it was a similar problem scope, only difference in this case rather than being used as a classifier it would be modified to give continuous variables. However this did not seem to be able to as effictively capture key features required to appropriately manouvre the vehicle.
+My first step was to use a convolution neural network model (Le-net 5) similar to the P2, the traffic sign classification problem. I thought this model might be appropriate because it was a similar problem scope, only difference in this case rather than being used as a classifier it would be modified to give continuous variables. However this did not seem to be able to as effictively capture key features required to appropriately manouvre the vehicle despite low mse error during testing.
 
-Secondly rather than taking in the Y channel of a YUV images, this architecture made us of fully colored RGB pictures.
+Secondly rather than preprocessing input images by taking in the Y channel of YUV images, this architecture made us of fully colored normalized RGB pictures.
+
 ####2. Final Model Architecture
 
 The final model was then changed to the NVIDIA architecture as described by [Nvidia architecture](https://images.nvidia.com/content/tegra/automotive/images/2016/solutions/pdf/end-to-end-dl-using-px.pdf)
 
 
 ####3. Creation of the Training Set & Training Process
-Being aware that I was working with a limited data set I chose to use a generator that took images from the test set and augmented them in several ways, as listed below:
+Being aware that I was working with a limited data set I chose to use a generator that took images from the test set and augmented them in several ways, this was inspired by the [blog post](https://blog.keras.io/building-powerful-image-classification-models-using-very-little-data.html). The data set was augmented in the following means:
 * Add jitter
 * Add random shadow over entire image
 * Add shadow in particular image region.
@@ -91,7 +89,7 @@ A generator when called by the model.fit.generator, would then randomly augment 
 As earlier mentioned it was a massive oversight not recognizing tha the images captured in the test set were collected at varying throttle magnitudes. Lowering this value during model simulation testing led to better expected results.
 
 ####4. Suggested model improvement
-* Collect larger training data set.
+* Collect larger training data set, with more diverse steering angles and throttle magnitudes.
 * Implement archicture that takes throttle, brake and steering labels given an image: this makes the model more effective at
 determing the correct steering angle
 * Look into using a CovRNN architecture which is probably significantly more effective at capturing adequate steering angles.
