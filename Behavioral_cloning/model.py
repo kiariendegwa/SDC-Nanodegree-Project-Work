@@ -74,13 +74,25 @@ def random_translation(img, steering):
 
     return img, steering
 
+
+def bright_aug(img):
+    # 1 Brightness augmentation
+    img = cv2.cvtColor(img,cv2.COLOR_RGB2HSV)
+    r_bright = .25+np.random.uniform()
+    img[:,:,2] = img[:,:,2]*r_bright
+    img = cv2.cvtColor(img,cv2.COLOR_HSV2RGB)
+    return img
+
 def data_augmentation(x, y):
     # random horizontal shift
     x, y = random_translation(x, y)
 
     # random horizontal flip
     x, y = random_horizontal_flip(x, y)
-
+    
+    #random brightness augmentation
+    x = bright_aug(x)
+    
     return x, y
 
 #-------------------------------------------------#
@@ -298,6 +310,7 @@ def main():
     img_shifted.to_csv('data/balanced_driver_log.csv')
     global train
     global test
+    #90% training data, 10% testing data
     train, test = train_test_split(img_shifted, test_size = 0.10)
     #load model:
     net = covnet()
