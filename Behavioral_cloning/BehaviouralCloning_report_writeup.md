@@ -96,10 +96,15 @@ Given the original image:
 
 A generator when called by the model.fit.generator, would then randomly augment the initial data set and produce more data for training. This led to ALOT of troubleshooting as to whether or not the data pipeline was adequately passing info to the model.fit.generator as this expanded data set did not lead to the expected model improvements.
 
-As earlier mentioned it was a massive oversight not recognizing tha the images captured in the test set were collected at varying throttle magnitudes. Lowering this value during model simulation testing led to better expected results.
+The generator generated 30,000 augmented training images for every epoch.
+The submitted model was trained for 10 epochs before the car could adequately navigate around the track.
+
+As earlier mentioned it was a massive oversight not recognizing tha the images captured in the test set were collected at varying limited throttle magnitudes. Lowering this value during model simulation testing led to better expected results. As a side note should the data have been collected with a single throttle value, this would not have a been an issue during replication.
 
 ####4. Suggested model improvement
-* Collect larger training data set, with more diverse steering angles and throttle magnitudes.
+After training the vehicle could adequately navigate around the track, however the smoothness of the driving could've been further improved by:
+
+* Collecting larger training data set, with more diverse steering angles and throttle magnitudes.
 * Implement archicture that takes throttle, brake and steering labels given an image: this makes the model more effective at
 determing the correct steering angle
-* Look into using a CovRNN architecture which is probably significantly more effective at capturing adequate steering angles.
+* Look into using a CovRNN architecture which is probably significantly more effective at capturing adequate steering angles, as this problem can be modelled as a markov chain.
