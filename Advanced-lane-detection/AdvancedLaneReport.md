@@ -26,8 +26,8 @@ The goals / steps of this project are the following:
 [image6]: ./output_images/yellow_and_white_filter_image.png "Color filter"
 [image7]: ./output_images/color_sobel_filter_images.png "Combined sobel and color filter"
 [image8]: ./output_images/polynomial_fit.png "Polynomial fit"
-[image9]: .output_images/lane_overlay.png "Lane curve and lane overlay"
-[image10]: .output_images/perspective_full_figure.png "Perspective check"
+[image9]: ./output_images/lane_overlay.png "Lane curve and lane overlay"
+[image10]: ./output_images/perspective_full_figure.png "Perspective check"
 [video1]: ./project_video.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
