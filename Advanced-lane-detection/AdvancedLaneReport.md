@@ -103,11 +103,10 @@ The lane detection was carried out by using histogram analysis on the resulting 
 *color and sobel filters,
 *image warping - birds eye view
 
-The image is split into 2 images along its x axis, splittin the image into a left and right lanes. Each of these is then split into 9 windows, each of which has its histrogram plotted i.e. occurence of pixels larger than 0.
+The image is split into 2 images along its x axis, splitting the image into a left and right lanes. Each of these is then split into 9 windows, each of which has its histrogram plotted i.e. occurence of pixels larger than 0.
 
-These resulting histograms are used to initially find the center points of the input gray images. These resulting center points are then used to calculate the result 2nd order polynomial using the `np.polyfit` function. 
+These resulting histograms are used to initially find the center points of the input warped gray image by performing a blind search. These resulting center points are then used to calculate the resultant 2nd order polynomial using the `np.polyfit` function whose values are then used to calculate the polygon used to highlight road lanes. 
 
-These center points within the aforementioned windows are further made robust given multiple frames, by comparing centre points from current and previous frames and adjusting center points should they exceed threshold contained within the code.
 
 ![alt text][image8]
 
