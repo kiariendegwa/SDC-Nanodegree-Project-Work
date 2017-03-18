@@ -11,7 +11,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 [image1]: ./report_images/u-net-architecture.png
-[image2]: .report_images/training_data.png
+[image2]: ./report_images/training_data.png
 [image3]: ./report_images/more_training_data2.png
 [image4]: ./report_images/Predictions.png
 [image5]: ./report_images/Network_Architecture.png
@@ -33,7 +33,7 @@ You're reading it!
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-Having noticed the computational bottleneck caused by the sliding window approach, requiring the window to check multiple image scales. I decided to instead implement a neural segmentation algorithm based on the u-net design described here [insert link here]. 
+Having noticed the computational bottleneck caused by the sliding window approach, requiring the window to check multiple image scales. I decided to instead implement a neural segmentation algorithm based on the u-net design described here [U net link](http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/). 
 
 ![U-net architecture][image1]
 
