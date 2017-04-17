@@ -30,7 +30,7 @@ new_size_row = 64
 new_size_col = 64
 
 def resizeImage(x):
-    FINAL_IMG_SHAPE = (66, 200, 3)
+    FINAL_IMG_SHAPE = (160, 320, 3)
 
     height = x.shape[0]
     width = x.shape[1]
@@ -60,9 +60,9 @@ def telemetry(sid, data):
     # This model currently assumes that the features of the model are just the images. Feel free to change this.
     steering_angle = float(model.predict(transformed_image_array, batch_size=1))
     # The driving model currently just outputs a constant throttle. Feel free to edit this.
-    throttle = 0.09
+    throttle = 0.5
     if abs(steering_angle) > 0.25:
-             throttle = 0.009
+             throttle = 0.5
     print(steering_angle, throttle)
     send_control(steering_angle, throttle)
 
