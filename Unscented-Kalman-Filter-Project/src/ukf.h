@@ -74,6 +74,16 @@ public:
   ///* the current NIS for laser
   double NIS_laser_;
 
+  MatrixXd R_radar_;
+
+  MatrixXd R_laser_;
+
+  ///* for Zpred transformation
+  MatrixXd H_laser_;
+
+  ///* time when the state is true, in us
+  long long previous_timestamp_;
+
   /**
    * Constructor
    */
@@ -101,13 +111,42 @@ public:
    * Updates the state and the state covariance matrix using a laser measurement
    * @param meas_package The measurement at k+1
    */
-  void UpdateLidar(MeasurementPackage meas_package);
+  void UpdateLidar(const Eigen::MatrixXd& Xsig_pred,
+                   const Eigen::MatrixXd& Zsig,
+                   const Eigen::VectorXd& z_pred,
+                   const Eigen::MatrixXd& S,
+                   MeasurementPackage reading);
 
   /**
    * Updates the state and the state covariance matrix using a radar measurement
    * @param meas_package The measurement at k+1
    */
-  void UpdateRadar(MeasurementPackage meas_package);
+  void UpdateRadar(const Eigen::MatrixXd& Xsig_pred,
+                   const Eigen::MatrixXd& Zsig,
+                   const Eigen::VectorXd& z_pred,
+                   const Eigen::MatrixXd& S,
+                   MeasurementPackage reading);
+
+  /**
+  * Helper function that updates Lidar or Radar data
+  */
+  void Update(MeasurementPackage meas_package);
+
+  /**
+  *Predict the measurement state of the Lidar sensor
+  */
+  void PredictLidarMeasurement(const MatrixXd& Xsig_pred,
+                               VectorXd* z_out,
+                               MatrixXd* S_out,
+                               MatrixXd* Zsig_out);
+
+  /**
+  *Predict the measurement state of the radar sensor
+  */
+  void PredictRadarMeasurement(const MatrixXd& Xsig_pred,
+                                  VectorXd* z_out,
+                                  MatrixXd* S_out,
+                                  MatrixXd* Zsig_out);
 };
 
 #endif /* UKF_H */
