@@ -147,6 +147,17 @@ public:
                                   VectorXd* z_out,
                                   MatrixXd* S_out,
                                   MatrixXd* Zsig_out);
+ /** Helper functions for the prediction function: Makes code
+ significantly more readable and easier to debug
+**/
+  void PredictSigmaPoints(const MatrixXd& Xsig_aug,
+                          const double dt,
+                          MatrixXd* Xsig_out);
+
+  void PredictMeanAndCovariance(const Eigen::MatrixXd& Xsig_pred);
+
+  void GenerateSigmaPoints(MatrixXd* Xsig_out);
+
 };
 
 #endif /* UKF_H */
