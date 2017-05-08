@@ -23,6 +23,9 @@ public:
   ///* if this is false, radar measurements will be ignored (except for init)
   bool use_radar_;
 
+  ///* time when the state is true, in us
+  long long time_us_;
+
   ///* state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
   VectorXd x_;
 
@@ -31,9 +34,6 @@ public:
 
   ///* predicted sigma points matrix
   MatrixXd Xsig_pred_;
-
-  ///* time when the state is true, in us
-  long long time_us_;
 
   ///* Process noise standard deviation longitudinal acceleration in m/s^2
   double std_a_;
