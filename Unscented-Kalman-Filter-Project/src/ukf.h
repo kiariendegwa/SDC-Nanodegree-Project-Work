@@ -65,6 +65,9 @@ public:
   ///* Augmented state dimension
   int n_aug_;
 
+  ///* Number of sigma points
+  int n_sig_;
+
   ///* Sigma point spreading parameter
   double lambda_;
 
@@ -74,15 +77,11 @@ public:
   ///* the current NIS for laser
   double NIS_laser_;
 
+  ///* Radar measurement noise covariance matrix
   MatrixXd R_radar_;
 
-  MatrixXd R_laser_;
-
-  ///* for Zpred transformation
-  MatrixXd H_laser_;
-
-  ///* time when the state is true, in us
-  long long previous_timestamp_;
+  ///* Lidar measurement noise covariance matrix
+  MatrixXd R_lidar_;
 
   /**
    * Constructor
@@ -95,10 +94,15 @@ public:
   virtual ~UKF();
 
   /**
-   * ProcessMeasurement
-   * @param meas_package The latest measurement data of either radar or laser
+   *  Angle normalization to [-Pi, Pi]
    */
-  void ProcessMeasurement(MeasurementPackage meas_package);
+  void NormalizeAngle(double *ang);
+
+  /**
+   * ProcessMeasurement
+   * @param measurement_pack The latest measurement data of either radar or laser
+   */
+  void ProcessMeasurement(MeasurementPackage measurement_pack);
 
   /**
    * Prediction Predicts sigma points, the state, and the state covariance
@@ -111,53 +115,18 @@ public:
    * Updates the state and the state covariance matrix using a laser measurement
    * @param meas_package The measurement at k+1
    */
-  void UpdateLidar(const Eigen::MatrixXd& Xsig_pred,
-                   const Eigen::MatrixXd& Zsig,
-                   const Eigen::VectorXd& z_pred,
-                   const Eigen::MatrixXd& S,
-                   MeasurementPackage reading);
+  void UpdateLidar(MeasurementPackage meas_package);
 
   /**
    * Updates the state and the state covariance matrix using a radar measurement
    * @param meas_package The measurement at k+1
    */
-  void UpdateRadar(const Eigen::MatrixXd& Xsig_pred,
-                   const Eigen::MatrixXd& Zsig,
-                   const Eigen::VectorXd& z_pred,
-                   const Eigen::MatrixXd& S,
-                   MeasurementPackage reading);
-
+  void UpdateRadar(MeasurementPackage meas_package);
   /**
-  * Helper function that updates Lidar or Radar data
-  */
-  void Update(MeasurementPackage meas_package);
-
-  /**
-  *Predict the measurement state of the Lidar sensor
-  */
-  void PredictLidarMeasurement(const MatrixXd& Xsig_pred,
-                               VectorXd* z_out,
-                               MatrixXd* S_out,
-                               MatrixXd* Zsig_out);
-
-  /**
-  *Predict the measurement state of the radar sensor
-  */
-  void PredictRadarMeasurement(const MatrixXd& Xsig_pred,
-                                  VectorXd* z_out,
-                                  MatrixXd* S_out,
-                                  MatrixXd* Zsig_out);
- /** Helper functions for the prediction function: Makes code
- significantly more readable and easier to debug
-**/
-  void PredictSigmaPoints(const MatrixXd& Xsig_aug,
-                          const double dt,
-                          MatrixXd* Xsig_out);
-
-  void PredictMeanAndCovariance(const Eigen::MatrixXd& Xsig_pred);
-
-  void GenerateSigmaPoints(MatrixXd* Xsig_out);
-
+   * Updates the state and the state covariance matrix of the UKF
+   *
+   */
+  void UpdateUKF(MeasurementPackage meas_package, MatrixXd Zsig, int n_z);
 };
 
 #endif /* UKF_H */
