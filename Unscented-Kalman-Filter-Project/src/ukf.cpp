@@ -158,7 +158,7 @@ void UKF::Prediction(double delta_t) {
   // Augmented mean vector
   VectorXd x_aug = VectorXd(n_aug_);
 
-  // Augmented state covarience matrix
+  // Augmented state covariance matrix
   MatrixXd P_aug = MatrixXd(n_aug_, n_aug_);
 
   // Sigma point matrix
@@ -177,19 +177,15 @@ void UKF::Prediction(double delta_t) {
 
   // Create sigma points
   Xsig_aug.col(0) = x_aug;
-  double sqrt_lambda_n_aug = sqrt(lambda_+n_aug_);
-  VectorXd sqrt_lambda_n_aug_L;
 
   for(int i = 0; i < n_aug_; i++) {
-	   sqrt_lambda_n_aug_L = sqrt_lambda_n_aug * L.col(i);
-     Xsig_aug.col(i+1)        = x_aug + sqrt_lambda_n_aug_L;
-     Xsig_aug.col(i+1+n_aug_) = x_aug - sqrt_lambda_n_aug_L;
+     Xsig_aug.col(i+1)        = x_aug + sqrt(lambda_+n_aug_) * L.col(i);
+     Xsig_aug.col(i+1+n_aug_) = x_aug - sqrt(lambda_+n_aug_) * L.col(i);
   }
 
   // Predict sigma points
   for (int i = 0; i< n_sig_; i++)
   {
-    // Extract values for better readability
     double p_x = Xsig_aug(0,i);
     double p_y = Xsig_aug(1,i);
     double v = Xsig_aug(2,i);
