@@ -161,13 +161,13 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 			transformed_observations.push_back(LandmarkObs{ observations[j].id, t_x, t_y });
 		}
 
-		//Find closest particles to observations
+		//Find closest predicted particles to observations
 		dataAssociation(predictions, transformed_observations);
 
 		// set weights to 1.0
 		particles[i].weight = 1.0;
 
-		for (int j = 0; j < transformed_os.size(); j++)
+		for (int j = 0; j < transformed_observations.size(); j++)
 		{
 			// placeholders for observation and associated prediction coordinates
 			double o_x = transformed_observations[j].x;
@@ -184,11 +184,11 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 				}
 			}
 			//Weights calculations for observations using mult-variate Gaussian
-			double s_x = std_landmark[0];
-			double s_y = std_landmark[1];
-			double obs_w = ( 1/(2*M_PI*s_x*s_y)) * exp( -( pow(pr_x-o_x,2)/(2*pow(s_x, 2)) + (pow(pr_y-o_y,2)/(2*pow(s_y, 2))) ) );
+			double std_x = std_landmark[0];
+			double std_y = std_landmark[1];
+			double observation_w = (1/(2*M_PI*std_x*std_y)) * exp( -( pow(pr_x-o_x,2)/(2*pow(std_x, 2)) + (pow(pr_y-o_y,2)/(2*pow(std_y, 2))) ) );
 			// product of this obersvation weight with total observations weight
-			particles[i].weight *= obs_w;
+			particles[i].weight *= observation_w;
 		}
   }
 }
