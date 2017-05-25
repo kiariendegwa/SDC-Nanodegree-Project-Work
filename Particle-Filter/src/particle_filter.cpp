@@ -59,6 +59,33 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	//  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
 
+	//Define Gaussian noise generators on GPS sensor
+  normal_distribution<double> x_Norm(0, std[0]);
+  normal_distribution<double> y_Norm(0, std[1]);
+  normal_distribution<double> theta_Norm(0, std[2]);
+
+	for (int i=0; i<num_particles; i++)
+	{
+		//if yaw rate measurements taken within 1e5 seconds assume yaw_rate = 0 and therefore
+		// use standard trig
+		if(abs(yaw_rate)<1e-5)
+		{
+			particles[i].x+=velocity*delta_t*cos(particles[i].theta)
+		}
+		else
+		{
+			//use standard prediction equations refered to in Udacity prediction
+			//in particle filter class
+			particles[i].x += velocity / yaw_rate * (sin(particles[i].theta + yaw_rate*delta_t) - sin(particles[i].theta));
+      particles[i].y += velocity / yaw_rate * (cos(particles[i].theta) - cos(particles[i].theta + yaw_rate*delta_t));
+      particles[i].theta += yaw_rate * delta_t;
+		}
+
+		//Add measurement noise
+		particles[i].x += x_Norm(gen);
+    particles[i].y += y_Norm(gen);
+    particles[i].theta += theta_Norm(gen);
+	}
 }
 
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations) {
