@@ -1,4 +1,4 @@
-# Install script for directory: /home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter
+# Install script for directory: /home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

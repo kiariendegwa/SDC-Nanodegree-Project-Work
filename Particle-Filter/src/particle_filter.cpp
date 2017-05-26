@@ -25,7 +25,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 	// Add random Gaussian noise to each particle.
 	// NOTE: Consult particle_filter.h for more information about this method (and others in this file).
 
-	//random generator
+	//random seed
 	static default_random_engine random_gen;
 
   //Define Gaussian noise generators on GPS sensor
@@ -40,17 +40,17 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
 		//initialize particles with noisy sensor data
 		Particle particle;
 		particle.id = i;
-		particle.x = x + X_Norm(random_gen);
-		particle.y = y + Y_Norm(random_gen);
+		particle.x = x + x_Norm(random_gen);
+		particle.y = y + y_Norm(random_gen);
 		particle.theta = theta + theta_Norm(random_gen);
 		//Set all default values of initialized particles to weight 1
 		particle.weight = 1.;
 		//add to particle list/vector of particle filter
-		particles.push_back(particle)
+		particles.push_back(particle);
 	}
 
 	//initialized particle filter
-	is_initialized = true
+	is_initialized = true;
 }
 
 void ParticleFilter::prediction(double delta_t, double std_pos[], double velocity, double yaw_rate) {
@@ -59,10 +59,13 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 	//  http://en.cppreference.com/w/cpp/numeric/random/normal_distribution
 	//  http://www.cplusplus.com/reference/random/default_random_engine/
 
+	//random seed
+	static default_random_engine random_gen;
+
 	//Define Gaussian noise generators on GPS sensor
-  normal_distribution<double> x_Norm(0, std[0]);
-  normal_distribution<double> y_Norm(0, std[1]);
-  normal_distribution<double> theta_Norm(0, std[2]);
+  normal_distribution<double> x_Norm(0, std_pos[0]);
+  normal_distribution<double> y_Norm(0, std_pos[1]);
+  normal_distribution<double> theta_Norm(0, std_pos[2]);
 
 	for (int i=0; i<num_particles; i++)
 	{
@@ -70,7 +73,7 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		// use standard trig
 		if(abs(yaw_rate)<1e-5)
 		{
-			particles[i].x+=velocity*delta_t*cos(particles[i].theta)
+			particles[i].x+=velocity*delta_t*cos(particles[i].theta);
 		}
 		else
 		{
@@ -111,7 +114,7 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
       // find the predicted landmark nearest the current observed landmark
       if (Currentdistance < minDist) {
         minDist = Currentdistance;
-        minParticleId= p.id;
+        minParticleId= prediction.id;
       }
     }
     observations[i].id = minParticleId;
@@ -148,7 +151,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
 			if (abs(dist(p_x, p_y, l_x, l_y)) <= sensor_range)
 			{
-				predictions.push_back(LandmarkObs{ lm_id, lm_x, lm_y });
+				predictions.push_back(LandmarkObs{ l_id, l_x, l_y });
 			}
 		}
 		// Transform sensor observations coordinates to map and particle coordinates
@@ -211,20 +214,20 @@ void ParticleFilter::resample() {
    }
 
    // generate random starting index for resampling wheel
-   uniform_int_distribution<int> uniintdist(0, num_particles-1);
-   auto index = uniintdist(random_gen);
+   uniform_int_distribution<int> random_int(0, num_particles-1);
+   auto index = random_int(random_gen);
 
    //get most accurate particle weight
    double max_weight = *max_element(weights.begin(), weights.end());
 
    // uniform random distribution [0.0, max_weight]
-   uniform_real_distribution<double> new_particle_dist(0.0, max_weight);
+   uniform_real_distribution<double> random_particle_dist(0.0, max_weight);
 
    double beta = 0.0;
 
    //resample wheel taken from Udacity classes
    for (int i = 0; i < num_particles; i++) {
-     beta += >new_particle_dist(random_gen) * 2.0;
+     beta +=random_particle_dist(random_gen) * 2.0;
      while (beta > weights[index]) {
        beta -= weights[index];
        index = (index + 1) % num_particles;

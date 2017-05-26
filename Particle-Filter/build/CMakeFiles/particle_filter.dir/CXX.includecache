@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/helper_functions.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/helper_functions.h
 sstream
 -
 fstream
@@ -16,9 +16,9 @@ math.h
 vector
 -
 map.h
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/map.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/map.h
 
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/json.hpp
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/json.hpp
 algorithm
 -
 array
@@ -74,21 +74,21 @@ utility
 vector
 -
 
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/main.cpp
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/main.cpp
 uWS/uWS.h
 -
 iostream
 -
 json.hpp
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/json.hpp
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/json.hpp
 math.h
 -
 particle_filter.h
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/particle_filter.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/particle_filter.h
 
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/map.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/map.h
 
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/particle_filter.cpp
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/particle_filter.cpp
 random
 -
 algorithm
@@ -108,9 +108,9 @@ string
 iterator
 -
 particle_filter.h
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/particle_filter.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/particle_filter.h
 
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/particle_filter.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/particle_filter.h
 helper_functions.h
-/home/kiarie/Documents/SDC_Nano_Degree/Particle-Filter/src/helper_functions.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/Particle-Filter/src/helper_functions.h
 
