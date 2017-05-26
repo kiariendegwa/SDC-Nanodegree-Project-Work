@@ -82,9 +82,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 		}
 
 		//Add measurement noise
-		particles[i].x += x_Norm(gen);
-    particles[i].y += y_Norm(gen);
-    particles[i].theta += theta_Norm(gen);
+		particles[i].x += x_Norm(random_gen);
+    particles[i].y += y_Norm(random_gen);
+    particles[i].theta += theta_Norm(random_gen);
 	}
 }
 
@@ -198,6 +198,40 @@ void ParticleFilter::resample() {
 	// NOTE: You may find std::discrete_distribution helpful here.
 	//   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
 
+  //instantiate random seed
+	static default_random_engine random_gen;
+
+	//new particles buffer
+	vector<Particle> new_particles;
+
+   // Extract all current weights
+   vector<double> weights;
+   for (int i = 0; i < num_particles; i++) {
+     weights.push_back(particles[i].weight);
+   }
+
+   // generate random starting index for resampling wheel
+   uniform_int_distribution<int> uniintdist(0, num_particles-1);
+   auto index = uniintdist(random_gen);
+
+   //get most accurate particle weight
+   double max_weight = *max_element(weights.begin(), weights.end());
+
+   // uniform random distribution [0.0, max_weight]
+   uniform_real_distribution<double> new_particle_dist(0.0, max_weight);
+
+   double beta = 0.0;
+
+   //resample wheel taken from Udacity classes
+   for (int i = 0; i < num_particles; i++) {
+     beta += >new_particle_dist(random_gen) * 2.0;
+     while (beta > weights[index]) {
+       beta -= weights[index];
+       index = (index + 1) % num_particles;
+     }
+     new_particles.push_back(particles[index]);
+   }
+   particles = new_particles;
 }
 
 Particle ParticleFilter::SetAssociations(Particle particle, std::vector<int> associations, std::vector<double> sense_x, std::vector<double> sense_y)
