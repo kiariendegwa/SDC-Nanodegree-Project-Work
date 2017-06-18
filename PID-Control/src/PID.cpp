@@ -1,5 +1,7 @@
 #include "PID.h"
 #include <numeric>
+#include <vector>
+
 using namespace std;
 
 /*
@@ -31,5 +33,4 @@ double PID::TotalError() {
 }
 
 void PID::Twiddle(double cte){
-
 }

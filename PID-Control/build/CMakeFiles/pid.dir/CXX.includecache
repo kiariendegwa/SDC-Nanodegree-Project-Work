@@ -6,15 +6,17 @@
 
 #IncludeRegexTransform: 
 
-/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control-Project/src/PID.cpp
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control/src/PID.cpp
 PID.h
-/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control-Project/src/PID.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control/src/PID.h
 numeric
 -
+vector
+-
 
-/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control-Project/src/PID.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control/src/PID.h
 
-/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control-Project/src/json.hpp
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control/src/json.hpp
 algorithm
 -
 array
@@ -70,15 +72,15 @@ utility
 vector
 -
 
-/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control-Project/src/main.cpp
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control/src/main.cpp
 uWS/uWS.h
 -
 iostream
 -
 json.hpp
-/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control-Project/src/json.hpp
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control/src/json.hpp
 PID.h
-/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control-Project/src/PID.h
+/home/kiarie/Documents/SDC-Nanodegree-Project-Work/PID-Control/src/PID.h
 math.h
 -
 
