@@ -8,6 +8,7 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "MPC.h"
 #include "json.hpp"
+#include <cppad/ipopt/solve.hpp>
 
 // for convenience
 using json = nlohmann::json;
@@ -98,17 +99,28 @@ int main() {
           * Both are in between [-1, 1].
           *
           */
+          // Transform ptsx, ptsy to car coords
+          // TODO: implement in separate function
+          for (int i = 0; i < int(ptsx.size()); i++) {
+            double dtx = ptsx[i] - px;
+            double dty = ptsy[i] - py;
+
+            ptsx[i] = dtx * cos(psi) + dty * sin(psi);
+            ptsy[i] = dty * cos(psi) - dtx * sin(psi);
+          }
+
+          // Put ptsx and ptsy data into vectors
+          Eigen::VectorXd ptsxvec = Eigen::VectorXd::Map(ptsx.data(), ptsx.size());
+          Eigen::VectorXd ptsyvec = Eigen::VectorXd::Map(ptsy.data(), ptsy.size());
 
           //Fit polynomial given car coordinates
-          auto ceoffs = polyfit(ptsx, ptsy, 3);
+          auto coeffs = polyfit(ptsxvec, ptsyvec, 3);
 
           //find cross check error given predicted trajectory
-          double cte = polyeval(coeffs, 0);
-
           double x = -1;
           double y = 10;
-          double psi = 0;
-          double v = 10;
+          double dt = 0.1;
+          double Lf = 2.76;
 
           // TODO: calculate the cross track error
           double cte = polyeval(coeffs, x) - y;
@@ -131,13 +143,9 @@ int main() {
           Eigen::VectorXd predicted_state(6);
           predicted_state << predicted_x, predicted_y, predicted_psi, predicted_v, predicted_cte, predicted_epsi;
 
-
-
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
           // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-          msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = throttle_value;
 
           //Display the MPC predicted trajectory
           vector<double> mpc_x_vals;
@@ -146,15 +154,16 @@ int main() {
           // Solve using MPC
           // coeffs to predict future cte and epsi
           auto result = mpc.Solve(predicted_state, coeffs);
-          double steer_value;
-          double throttle_value;
 
           double steer_value = result[0]/ (deg2rad(25)*Lf);
           std::cout << "steer_value: " << steer_value << endl;
           double throttle_value = result[1];
 
+          msgJson["steering_angle"] = steer_value;
+          msgJson["throttle"] = throttle_value;
           mpc.prev_a = throttle_value;
-          for (int i = 2; i < result.size(); i++) {
+
+          for (int i = 2; i < int(result.size()); i++) {
               if(i%2 == 0){
                 mpc_x_vals.push_back(result[i]);
               } else {

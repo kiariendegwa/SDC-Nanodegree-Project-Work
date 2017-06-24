@@ -1,1 +1,0 @@
-/home/kiarie/Documents/SDC-Nanodegree-Project-Work/MPC-Control/Ipopt-releases-3.12.8/Ipopt/tutorial/CodingExercise/Matlab/2-mistake/TutorialMatlab.m

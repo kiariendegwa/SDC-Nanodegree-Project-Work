@@ -1,1 +1,0 @@
-/home/kiarie/Documents/SDC-Nanodegree-Project-Work/MPC-Control/Ipopt-releases-3.12.8/Ipopt/tutorial/CodingExercise/Cpp/3-solution/TutorialCpp_main.cpp
