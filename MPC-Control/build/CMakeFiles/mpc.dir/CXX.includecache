@@ -781,6 +781,8 @@ cppad/ipopt/solve.hpp
 -
 Eigen-3.3/Eigen/Core
 /home/kiarie/Documents/SDC-Nanodegree-Project-Work/MPC-Control/src/Eigen-3.3/Eigen/Core
+math.h
+-
 limits
 -
 
@@ -859,6 +861,10 @@ thread
 -
 vector
 -
+cppad/cppad.hpp
+-
+cppad/ipopt/solve.hpp
+-
 Eigen-3.3/Eigen/Core
 /home/kiarie/Documents/SDC-Nanodegree-Project-Work/MPC-Control/src/Eigen-3.3/Eigen/Core
 Eigen-3.3/Eigen/QR
@@ -867,6 +873,4 @@ MPC.h
 /home/kiarie/Documents/SDC-Nanodegree-Project-Work/MPC-Control/src/MPC.h
 json.hpp
 /home/kiarie/Documents/SDC-Nanodegree-Project-Work/MPC-Control/src/json.hpp
-cppad/ipopt/solve.hpp
--
 

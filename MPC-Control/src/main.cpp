@@ -4,11 +4,12 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <cppad/cppad.hpp>
+#include <cppad/ipopt/solve.hpp>
 #include "Eigen-3.3/Eigen/Core"
 #include "Eigen-3.3/Eigen/QR"
 #include "MPC.h"
 #include "json.hpp"
-#include <cppad/ipopt/solve.hpp>
 
 // for convenience
 using json = nlohmann::json;
@@ -72,7 +73,7 @@ int main() {
   // MPC is initialized here!
   MPC mpc;
 
-  h.onMessage([&mpc](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&mpc](uWS::WebSocket<uWS::SERVER> ws, char *data, int length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -93,14 +94,7 @@ int main() {
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
 
-          /*
-          * TODO: Calculate steering angle and throttle using MPC.
-          *
-          * Both are in between [-1, 1].
-          *
-          */
-          // Transform ptsx, ptsy to car coords
-          // TODO: implement in separate function
+          //transform to car coordinates (frame)
           for (int i = 0; i < int(ptsx.size()); i++) {
             double dtx = ptsx[i] - px;
             double dty = ptsy[i] - py;
@@ -109,30 +103,27 @@ int main() {
             ptsy[i] = dty * cos(psi) - dtx * sin(psi);
           }
 
-          // Put ptsx and ptsy data into vectors
+          // ptsx and ptsy data into vectors
           Eigen::VectorXd ptsxvec = Eigen::VectorXd::Map(ptsx.data(), ptsx.size());
           Eigen::VectorXd ptsyvec = Eigen::VectorXd::Map(ptsy.data(), ptsy.size());
 
-          //Fit polynomial given car coordinates
+          // Fit polynomial to x and y coordinates
           auto coeffs = polyfit(ptsxvec, ptsyvec, 3);
 
-          //find cross check error given predicted trajectory
-          double x = -1;
-          double y = 10;
+          // Estimate cross-track error
+          double cte = polyeval(coeffs, 0);
+          // Calculate orientation error
+          double epsi = -atan(coeffs[1]);
+
+          Eigen::VectorXd state(6);
+
+          const double Lf = 2.67;
           double dt = 0.1;
-          double Lf = 2.76;
-
-          // TODO: calculate the cross track error
-          double cte = polyeval(coeffs, x) - y;
-          // TODO: calculate the orientation error
-          double epsi = psi - atan(coeffs[1]);
-
-          //Use model predicted errors to calculate new state vector
-          //Past angle and Accelerations
+          // Previous steering angle and throttle
           double delta = j[1]["steering_angle"];
           double prev_a = mpc.prev_a;
 
-          //Predicted state values
+          // Predict (x = y = psi = 0)
           double predicted_x = v * dt;
           double predicted_y = 0;
           double predicted_psi = - v * delta / Lf * dt;
@@ -140,39 +131,37 @@ int main() {
           double predicted_cte = cte + v * CppAD::sin(epsi) * dt;
           double predicted_epsi = epsi + predicted_psi;
 
-          Eigen::VectorXd predicted_state(6);
-          predicted_state << predicted_x, predicted_y, predicted_psi, predicted_v, predicted_cte, predicted_epsi;
-
-          json msgJson;
-          // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
-          // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-
-          //Display the MPC predicted trajectory
-          vector<double> mpc_x_vals;
-          vector<double> mpc_y_vals;
+          state << predicted_x, predicted_y, predicted_psi, predicted_v, predicted_cte, predicted_epsi;
 
           // Solve using MPC
           // coeffs to predict future cte and epsi
-          auto result = mpc.Solve(predicted_state, coeffs);
+          auto result = mpc.Solve(state, coeffs);
 
           double steer_value = result[0]/ (deg2rad(25)*Lf);
           std::cout << "steer_value: " << steer_value << endl;
           double throttle_value = result[1];
 
-          msgJson["steering_angle"] = steer_value;
-          msgJson["throttle"] = throttle_value;
           mpc.prev_a = throttle_value;
 
-          for (int i = 2; i < int(result.size()); i++) {
-              if(i%2 == 0){
-                mpc_x_vals.push_back(result[i]);
-              } else {
-                mpc_y_vals.push_back(result[i]);
-              }
-            }
+          json msgJson;
+          msgJson["steering_angle"] = steer_value;
+          msgJson["throttle"] = throttle_value;
+
+          //Display the MPC predicted trajectory
+          vector<double> mpc_x_vals;
+          vector<double> mpc_y_vals;
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Green line
+          // std::cout << "result size: " << result.size() << endl;
+          for (int i = 2; i < int(result.size()); i++) {
+            if(i%2 == 0){
+              mpc_x_vals.push_back(result[i]);
+            } else {
+              mpc_y_vals.push_back(result[i]);
+            }
+          }
+
           msgJson["mpc_x"] = mpc_x_vals;
           msgJson["mpc_y"] = mpc_y_vals;
 
@@ -180,17 +169,18 @@ int main() {
           vector<double> next_x_vals;
           vector<double> next_y_vals;
 
+          next_x_vals.resize(ptsxvec.size());
+          next_y_vals.resize(ptsyvec.size());
+
+          //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
+          // the points in the simulator are connected by a Yellow line
           for (int i = 0; i < ptsxvec.size(); i++) {
             next_x_vals[i] = ptsxvec[i];
             next_y_vals[i] = ptsyvec[i];
           }
 
-          //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
-          // the points in the simulator are connected by a Yellow line
-
           msgJson["next_x"] = next_x_vals;
           msgJson["next_y"] = next_y_vals;
-
 
           auto msg = "42[\"steer\"," + msgJson.dump() + "]";
           std::cout << msg << std::endl;
@@ -233,7 +223,7 @@ int main() {
   });
 
   h.onDisconnection([&h](uWS::WebSocket<uWS::SERVER> ws, int code,
-                         char *message, size_t length) {
+                         char *message, int length) {
     ws.close();
     std::cout << "Disconnected" << std::endl;
   });
