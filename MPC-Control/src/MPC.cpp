@@ -1,7 +1,3 @@
-/*
- * Code heavily adapted from Udacity's code, e.g.
- * CarND-MPC-Quizzes: mpc_to_line
- */
 #include "MPC.h"
 #include <cppad/cppad.hpp>
 #include <cppad/ipopt/solve.hpp>
