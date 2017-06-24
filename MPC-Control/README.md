@@ -2,6 +2,59 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+## Project Details
+
+### Model description
+The vehicle model control system in this project is described by 3 components, namely:
+
+* The vehicle's current states
+* The vehicle's actuator states
+* The vehicle's dynamic description - state transition mechanism
+
+These are further described in detail below.
+
+1. The vehicle state = [x,y,ψ,v] can be described using four components:
+    x: the x-position
+    y: the y-position
+    ψ: the vehicle orientation
+    v: the velocity
+
+2. The vehicle actuators are described by the state = [δ, a]
+    Actuators are the physical control systems and for the purposes of
+    our simple system are described by:
+    δ (the steering angle) and
+    a (acceleration/deccelaration - dependant on signage
+
+3. Vehicle state transfer functions describe the vehicle in motion.
+    x = x + v*cos(ψ)* dt
+    y = y + v sin(psi) dt
+    v = v+a∗dt
+        a in [-1,1]
+    ψ = ψ+(v/L_f)*δ∗dt
+
+### Timestep Length and Elapsed Duration (N & dt)
+
+N is the number of timesteps the model predicts ahead. As N and dt increases, the model tries to predict further ahead in time.
+
+dt is the length of each timestep. As dt decreases, it resamples the measurement space more frequently giving it a finer potentially noiser sample.
+
+This sampling rate multiplied by N steps both determine the distance of our receding prediction horizon. Since models can never fully describe vehicle dynamics, we can never have a one off prediction of precisely where the vehicle is and what the actuators are precisely going to do. 
+
+The values of N = 20 and dt = 0.1 are arbritarily chosen. And found to work quite effectively. Given more time, optimizing these two values could yield potentially more stable navigation aroun the track.
+
+### Polynomial Fitting and MPC Preprocessing
+
+The mpc algorithm follows the following steps
+
+* Take in current state as the initial state to the controller                        * Call in optimization solver. Given the initial state, the solver will return the vector of control inputs that minimizes the cost function. 
+* Read in the next state (and convert global coordinates to vehicle's frame) given after the latency period and repeat the algorithm.
+
+
+### Model Predictive Control with Latency
+
+It is particularly imperative to add latency as this more accurately describes the duration within which actuators actions result into measureable results. A short latency results in jerky movement based on previous actuator values rather than the current actuator state values. 
+
+Additionally given that I was processing this model on a slow virtual machine, this proved invaluable to further getting more accurate results given the slow rate of the asynchronous mpc model server and unity client.
 
 ## Dependencies
 
