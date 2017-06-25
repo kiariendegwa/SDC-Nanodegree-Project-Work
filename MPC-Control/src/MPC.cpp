@@ -8,7 +8,7 @@
 using CppAD::AD;
 
 //Set number of look ahead steps and their durations
-int N = 20;
+int N = 10;
 double dt = 0.1;
 
 // This value assumes the model presented in the classroom is used.
@@ -26,7 +26,7 @@ const double Lf = 2.67;
 // Reference cross-track error and orientation error = 0
 double ref_cte = 0;
 double ref_epsi = 0;
-double ref_v = 10;
+double ref_v = 20;
 
 //FG state and actuator indices
 int x_start = 0;
@@ -72,8 +72,8 @@ class FG_eval {
 
     //Actuators cost
     for (int i = 0; i < N - 1; i++) {
-      fg[0] += pow(vars[delta_start + i], 2);
-      fg[0] += pow(vars[a_start + i], 2);
+      fg[0] += 5*pow(vars[delta_start + i], 2);
+      fg[0] += 5*pow(vars[a_start + i], 2);
     }
 
     // Actuator rate/differential cost
