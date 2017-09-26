@@ -51,23 +51,24 @@ This is then used to draw bounding boxes around the area of interest.
 
 ![Tagged training data][image3]
 
-RGB images of 400 by 640 where directly feed into the neural network given the tagged images highlighted above. 
-The neural net was feed training images of the unmarked driving data alongside a training set comprised of bounding boxes around vehicles.
+RGB images of 400 by 640 where directly feed into the neural network given the tagged binary masks(The final training masks fed into the network where 1*400*600 - should we have had multiple classes of objects
+say, 3, the training mask would have been 3*400*600 - you get the drift).
 
-These trained neural net resulted in the following heatmaps/normalized logits:
+
+The trained neural net resulted in the following heatmaps/normalized logits after 3hrs training:
 
 ![Original image alongside predicted hotspots and training data][image4]
 
-It was somewhat of a relief to find sufficient results given that no data augmentation was carried out. Theoretically this could have]
-been used to increase the data set from 33GB to 100GB. This would have most certaintly resulted in better segmentation, however this is
-a MVP to be re-written in Pytorch (Keras is fun for rapid protoyping).
+It was somewhat of a relief to find  the sufficient results given that no data augmentation was carried out. Theoretically this could have]
+been used to increase the data set from 33GB to 100GB - by adding shadows, random rotations etc. 
+This would have most certaintly resulted in better segmentation, however this is
+a MVP to be re-written in Pytorch (Keras and Jupyter are fun for rapid protoyping).
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-The neural architecture described below was picked so that the AWS GPU memory 
-would not run out given the size of the batch data being feed into it. The GPUs used I think were P2, so 16gb Memory.
+The neural architecture described below was picked as we are dealing with a single classification class. 
 The network was therefore trained on batch sizes of 1000 images(research shows that this should actually have been lower - but meh) 
-and trained for 30 epochs using an ADAM optimizer, a learning rate of 1e4. Here's a pretty picture of the final architecture:
+and trained for 30 epochs using an ADAM optimizer, with a learning rate of 1e4. Here's a pretty picture of the final architecture:
 
 ![Original image alongside predicted hotspots and training data][image5]
 
