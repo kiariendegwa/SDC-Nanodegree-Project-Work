@@ -39,8 +39,9 @@ seconds to render the video displayed in a later section. It was also a nice exc
  
 ![U-net architecture][image1]
 
-The 33gb Udacity training set alongside the CrowdAi data was sufficient enough to serve as a sufficient training set without need
-to apply transfer learning using a famous pre-trained covnet. Taking 1min 23s. However training took roughly 3hrs to carry out.
+The 33gb Udacity training set alongside the CrowdAi data was sufficient enough to serve as a training set without need
+to apply transfer learning using some random famous pre-trained covnet for one arm of the u-net. 
+However training took roughly 3hrs to carry out.
 
 Samples of the training data are highlighted below, the coordinates of which are described alongsided a .csv file 
 contained in the tagged data sets:
@@ -77,7 +78,7 @@ and trained for 30 epochs using an ADAM optimizer, with a learning rate of 1e4. 
 ### Video Implementation
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-Here's a [link to my video result](./project_video_output.mp4)
+Here's a [link to my video result](./project_video_output.mp4). Inference time took 1 min 23 seconds.
 
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
