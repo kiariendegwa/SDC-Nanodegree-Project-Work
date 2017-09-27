@@ -29,9 +29,8 @@ The goals stated goals of this project are the following:
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
 Having noticed the computational bottleneck caused by the sliding window approach. That is a situation whereby a window is iteratively passed
-over each image at at time complexity of q* O(n^(m*p)), where q is the number of sliding windows,
-n, the number of image pixels and (m*p) the sliding window dimensions.
-Clearly this quadratic time could be shortened dramatically using a neural segmentation algorithm, wink, wink. 
+over each image at at time complexity of O(xy(n^(n)), where n is the number of sliding windows and x and y, the width and height of the image.
+Clearly this polynomial time could be shortened dramatically using a neural segmentation algorithm. 
 The u-net design described here [U net link](http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/) was therefore used. This would require
 a single pass through the image, with optimized GPU calculations used to carry out the inference.
 The resultant net had an inference time far shorter than the HOG detector suggested by Udacity, taking 1min 23
