@@ -19,9 +19,6 @@ The goals stated goals of this project are the following:
 [image7]: ./examples/output_bboxes.png
 [video1]: ./project_video.mp4
 
-## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
-
 ---
 ### README
 ### Histogram of Oriented Gradients (HOG)
@@ -39,11 +36,11 @@ seconds to render the video displayed in a later section. It was also a nice exc
 ![U-net architecture][image1]
 
 The 33gb Udacity training set alongside the CrowdAi data was sufficient enough to serve as a training set without need
-to apply transfer learning using some random famous pre-trained covnet for one arm of the u-net. 
-However training took roughly 3hrs to carry out.
+to apply transfer learning using some random famous pre-trained covnet for one arm of the u-net or further data augmentation. 
+Training took roughly 3hrs to carry out given the above data sets.
 
 Samples of the training data are highlighted below, the coordinates of which are described alongsided a .csv file 
-contained in the tagged data sets:
+accompanying the image data:
 
 ![Initial 1920 by 1200 RGB training data][image2]
 
@@ -51,11 +48,11 @@ This is then used to draw bounding boxes around the area of interest.
 
 ![Tagged training data][image3]
 
-RGB images of 400 by 640 where directly feed into the neural network given the tagged binary masks(The final training masks fed into the network where 1*400*600 - should we have had multiple classes of objects
+Resized RGB images of 400 by 640 where directly feed into the neural network given the tagged binary masks(The final training masks fed into the network where 1*400*600 - should we have had multiple classes of objects
 say, 3, the training mask would have been 3*400*600 - you get the drift).
 
 
-The trained neural net resulted in the following heatmaps/normalized logits after 3hrs training:
+The trained neural net resulted in the following heatmaps/logits after training:
 
 ![Original image alongside predicted hotspots and training data][image4]
 
@@ -66,8 +63,8 @@ a MVP to be re-written in Pytorch (Keras and Jupyter are fun for rapid protoypin
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-The neural architecture described below was picked as we are dealing with a single classification class. 
-The network was therefore trained on batch sizes of 1000 images(research shows that this should actually have been lower - but meh) 
+The neural architecture described below was picked as we are dealing with image segmentation, and it is a well known tried and tested architecture. 
+The network was trained on batch sizes of 1000 images(research shows that this should actually have been lower - but meh) 
 and trained for 30 epochs using an ADAM optimizer, with a learning rate of 1e4. Here's a pretty picture of the final architecture:
 
 ![Original image alongside predicted hotspots and training data][image5]
@@ -85,16 +82,15 @@ Here's a [link to my video result](./project_video_output.mp4). Inference time t
 A global image buffer that calculated the heatmap average over every 10 frames was used. These heatmaps where used to determine the average heatmap coordinates overwhich a bounding box was overlayed over the corresponding frames. 
 This was sufficient in removing erraneous detections and crazy annoying damned jitter.
 
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
+Here's an example result showing the heatmap from a series of frames of the video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
 
 ![Original image alongside predicted hotspots and training data][image6]
 
 ---
 
-### Discussion
+### Discussions
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-The reason I chose to approach this problem using U nets is that I liked the idea of having an end to end gradient friendly algorithm. 
-Also this is the 21st century damnit, if you can solve a problem by propagating gradients, you betcha it's gonna work. Also this can be extended to detecting all manner of other random objects in a training set.
+The reason I chose to approach this problem using U nets is that I liked the idea of having an end to end algorithm with fast inference times. 
 
