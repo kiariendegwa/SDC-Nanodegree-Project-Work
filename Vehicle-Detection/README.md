@@ -26,8 +26,8 @@ The goals stated goals of this project are the following:
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
 Having noticed the computational bottleneck caused by the sliding window approach. That is a situation whereby a window is iteratively passed
-over each image at at time complexity of O(xy(n^(n)), where n is the number of sliding windows and x and y, the width and height of the image.
-Clearly this polynomial time could be shortened dramatically using a neural segmentation algorithm. 
+over each image at a worst case time complexity of O(xy(n^(n)), where n is the number of sliding windows and x and y, the width and height of the image.
+Clearly this polynomial time could be shortened dramatically using a neural segmentation algorithm with a theoretical time complextiy of O(n^3). 
 The u-net design described here [U net link](http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/) was therefore used. This would require
 a single pass through the image, with optimized GPU calculations used to carry out the inference.
 The resultant net had an inference time far shorter than the HOG detector suggested by Udacity, taking 1min 23
@@ -48,8 +48,8 @@ This is then used to draw bounding boxes around the area of interest.
 
 ![Tagged training data][image3]
 
-Resized RGB images of 400 by 640 where directly feed into the neural network given the tagged binary masks(The final training masks fed into the network where 1*400*600 - should we have had multiple classes of objects
-say, 3, the training mask would have been 3*400*600 - you get the drift).
+Resized RGB images of 400 by 640 where directly feed into the neural network given the tagged binary masks(The final training masks fed into the network where 1x400x600 - should we have had multiple classes of objects
+say, 3, the training mask would have been 3x400x600 - you get the drift).
 
 
 The trained neural net resulted in the following heatmaps/logits after training:
